@@ -10,27 +10,28 @@ export class ProductsService {
     productId: uuid(),
     productName: "Sabritas Normal 40g",
     price: 29,
-    coutSeal: 3,
+    countSeal: 3,
     provider: uuid(),
     },
     {
       productId: uuid(),
       productName: "Coca Cola 600ml",
       price: 40,
-      coutSeal: 2,
+      countSeal: 2,
       provider: uuid(),
     },
     {
       productId: uuid(),
       productName: "Agua Ciel 1L",
       price: 15,
-      coutSeal: 2,
+      countSeal: 2,
       provider: uuid(),
     }
     
     
   ]
   create(createProductDto: CreateProductDto) {
+    if(!createProductDto.productId) createProductDto.productId = uuid()
     createProductDto.productId = uuid()
     this.products.push(createProductDto)
     return createProductDto;
@@ -68,13 +69,18 @@ export class ProductsService {
   }
 
   update(id: string, updateProductDto: UpdateProductDto) {
-    let product = this.findOne(id)
-   
+    let product = this.findOne(id);
+    this.products = this.products.map((product) => {
+  if (product.productId === id)  return {
+      ...product,
+      ...updateProductDto,
+  }
+  return product;
+})
     return {
       ...product,
       ...updateProductDto,
-    }
-    
+   }
   }
 
   remove(id: string) {
